@@ -1,0 +1,50 @@
+run_type = "staged_learning"
+device = "cpu"
+tb_logdir = "/home/abhi/kras_screening/tb_logs"
+json_out_config = "/home/abhi/kras_screening/rl_kras_out.json"
+
+[parameters]
+prior_file = "/home/abhi/kras_screening/priors/reinvent.prior"
+agent_file = "/home/abhi/kras_screening/priors/reinvent.prior"
+summary_csv_prefix = "/home/abhi/kras_screening/results/kras_g12d_rl"
+batch_size = 32
+randomize_smiles = true
+
+[learning_strategy]
+type = "dap"
+sigma = 120
+rate = 0.0001
+
+[diversity_filter]
+type = "IdenticalMurckoScaffold"
+bucket_size = 25
+minscore = 0.4
+penalty_multiplier = 0.5
+
+[[stage]]
+chkpt_file = "/home/abhi/kras_screening/checkpoints/stage_1.chkpt"
+max_score = 0.85
+min_steps = 10
+max_steps = 50
+
+[stage.scoring]
+type = "geometric_mean"
+
+[[stage.scoring.component]]
+[stage.scoring.component.ExternalProcess]
+
+[[stage.scoring.component.ExternalProcess.endpoint]]
+name = "Vina_Docking_KRAS_G12D"
+weight = 0.70
+
+[stage.scoring.component.ExternalProcess.endpoint.params]
+executable = "/home/abhi/kras_screening/kras/bin/python"
+args = "/home/abhi/kras_screening/vina_worker.py"
+property = "docking_score"
+
+[[stage.scoring.component]]
+[stage.scoring.component.QED]
+
+[[stage.scoring.component.QED.endpoint]]
+name = "Drug_Likeness_QED"
+weight = 0.30

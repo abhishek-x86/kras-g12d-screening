@@ -1,0 +1,79 @@
+Candidate_ID,SMILES,MW,LogP,TPSA,RotBonds,QED,SAS,Gate_Status,Rejection_Reason
+KRAS_G12D_0001,CC(=O)N1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(Cl)c5F)cnn4C4CCNCC4)cnc3c2)CC1,550.04,4.25,99.41,4,0.392,3.14,PASSED,Meets all criteria
+KRAS_G12D_0002,CC(=O)N1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(F)c5F)cnn4C4CCN(C)CC4)cnc3c2)CC1,547.61,4.08,90.62,4,0.412,3.08,PASSED,Meets all criteria
+KRAS_G12D_0003,CC(=O)N1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(F)c5F)cnn4C4CCNCC4)cnc3c2)CC1,533.58,3.74,99.41,4,0.412,3.12,PASSED,Meets all criteria
+KRAS_G12D_0004,CCN1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(Cl)c5F)cnn4C4CCCCN4)cnc3c2)CC1,536.06,5.07,82.34,5,0.369,3.64,PASSED,Meets all criteria
+KRAS_G12D_0005,CCN1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(F)c5F)cnn4C4CCCCN4)cnc3c2)CC1,519.6,4.56,82.34,5,0.4,3.62,PASSED,Meets all criteria
+KRAS_G12D_0006,CCN1CCN(c2nc3ccccc3nc2-c2c(-c3c(O)ccc(Cl)c3F)cnn2C2CCNCC2)CC1,536.06,4.72,82.34,5,0.382,3.07,PASSED,Meets all criteria
+KRAS_G12D_0007,CCN1CCN(c2nc3ccccc3nc2-c2c(-c3c(O)ccc(F)c3F)cnn2C2CCN(C)CC2)CC1,533.63,4.55,73.55,5,0.403,3.01,PASSED,Meets all criteria
+KRAS_G12D_0008,CCN1CCN(c2nc3ccccc3nc2-c2c(-c3c(O)ccc(F)c3F)cnn2C2CCNCC2)CC1,519.6,4.21,82.34,5,0.409,3.05,PASSED,Meets all criteria
+KRAS_G12D_0009,CN1CCC(n2ncc(-c3c(F)ccc(O)c3F)c2-c2nc3ccc(F)cc3cc2F)CC1,456.44,5.29,54.18,3,0.426,2.99,PASSED,Meets all criteria
+KRAS_G12D_0010,CN1CCC(n2ncc(-c3c(O)ccc(Cl)c3F)c2-c2cnc3c(F)cc(N4CCNCC4)cc3n2)CC1,540.02,4.47,82.34,4,0.396,3.28,PASSED,Meets all criteria
+KRAS_G12D_0011,CN1CCC(n2ncc(-c3c(O)ccc(F)c3F)c2-c2cc3ccc(N4CCN(C)CC4)cc3nc2F)CC1,536.6,4.91,-,-,-,-,REJECTED,Flagged by PAINS / Brenk structural alert
+KRAS_G12D_0012,CN1CCC(n2ncc(-c3c(O)ccc(F)c3F)c2-c2cnc3c(F)cc(N4CCN(C)CC4)cc3n2)CC1,537.59,4.3,73.55,4,0.416,3.21,PASSED,Meets all criteria
+KRAS_G12D_0013,CN1CCC(n2ncc(-c3c(O)ccc(F)c3F)c2-c2cnc3c(F)cc(N4CCNCC4)cc3n2)CC1,523.56,3.96,82.34,4,0.419,3.26,PASSED,Meets all criteria
+KRAS_G12D_0014,CN1CCC(n2ncc(-c3c(O)ccc(F)c3F)c2-c2cnc3cc(N4CCC(F)CC4)ccc3n2)CC1,522.58,5.35,70.31,4,0.39,3.18,PASSED,Meets all criteria
+KRAS_G12D_0015,CN1CCC(n2ncc(-c3c(O)ccc(F)c3F)c2-c2cnc3cc(N4CCC(N)CC4)ccc3n2)CC1,519.6,4.34,96.33,4,0.414,3.14,PASSED,Meets all criteria
+KRAS_G12D_0016,CN1CCC(n2ncc(-c3c(O)ccc(F)c3F)c2-c2cnc3cc(N4CCC(O)CC4)ccc3n2)CC1,520.58,4.37,90.54,4,0.413,3.11,PASSED,Meets all criteria
+KRAS_G12D_0017,CN1CCC(n2ncc(-c3c(O)ccc(F)c3F)c2-c2cnc3cc(N4CCN(C)CC4)c(F)cc3n2)CC1,537.59,4.3,73.55,4,0.416,3.15,PASSED,Meets all criteria
+KRAS_G12D_0018,CN1CCC(n2ncc(-c3c(O)ccc(F)c3F)c2-c2cnc3cc(N4CCN(C)CC4)ccc3n2)CC1,519.6,4.16,73.55,4,0.434,3.05,PASSED,Meets all criteria
+KRAS_G12D_0019,CN1CCC(n2ncc(-c3c(O)ccc(F)c3F)c2-c2cnc3cc(N4CCN(CC#N)CC4)ccc3n2)CC1,544.61,4.06,-,-,-,-,REJECTED,Flagged by PAINS / Brenk structural alert
+KRAS_G12D_0020,CN1CCC(n2ncc(-c3c(O)ccc(F)c3F)c2-c2cnc3cc(N4CCN(CCO)CC4)ccc3n2)CC1,549.63,3.53,93.78,6,0.378,3.1,PASSED,Meets all criteria
+KRAS_G12D_0021,CN1CCC(n2ncc(-c3c(O)ccc(F)c3F)c2-c2cnc3cc(N4CCN(S(C)(=O)=O)CC4)ccc3n2)CC1,583.67,3.49,-,-,-,-,REJECTED,Failed MW: 583.7 (target 300-580)
+KRAS_G12D_0022,CN1CCC(n2ncc(-c3c(O)ccc(F)c3F)c2-c2cnc3cc(N4CCNCC4)c(Cl)cc3n2)CC1,540.02,4.47,82.34,4,0.396,3.21,PASSED,Meets all criteria
+KRAS_G12D_0023,CN1CCC(n2ncc(-c3c(O)ccc(F)c3F)c2-c2nc(F)c3cc(N4CCN(C)CC4)ccc3n2)CC1,537.59,4.3,73.55,4,0.389,3.18,PASSED,Meets all criteria
+KRAS_G12D_0024,CN1CCC(n2ncc(-c3c(O)ccc(F)c3F)c2-c2nc3c(Cl)cccc3nc2N2CCN(C)CC2)CC1,554.05,4.82,73.55,4,0.388,3.13,PASSED,Meets all criteria
+KRAS_G12D_0025,CN1CCC(n2ncc(-c3c(O)ccc(F)c3F)c2-c2nc3c(F)cccc3nc2N2CCNCC2)CC1,523.56,3.96,82.34,4,0.419,3.19,PASSED,Meets all criteria
+KRAS_G12D_0026,CN1CCC(n2ncc(-c3c(O)ccc(F)c3F)c2-c2nc3ccc(F)cc3nc2N2CCN(C)CC2)CC1,537.59,4.3,73.55,4,0.416,3.09,PASSED,Meets all criteria
+KRAS_G12D_0027,CN1CCC(n2ncc(-c3c(O)ccc(F)c3F)c2-c2nc3ccc(N4CCN(C)CC4)cc3cc2Cl)CC1,553.06,5.42,60.66,4,0.365,3.08,PASSED,Meets all criteria
+KRAS_G12D_0028,CN1CCC(n2ncc(-c3c(O)ccc(F)c3F)c2-c2nc3ccc(N4CCN(C)CC4)cc3cc2F)CC1,536.6,4.91,60.66,4,0.4,3.09,PASSED,Meets all criteria
+KRAS_G12D_0029,CN1CCC(n2ncc(-c3ccc(F)c(F)c3O)c2-c2nc3cc(N4CCN(C)CC4)ccc3cc2F)CC1,536.6,4.91,60.66,4,0.4,3.08,PASSED,Meets all criteria
+KRAS_G12D_0030,CN1CCC(n2ncc(-c3cnc4cc(N5CCN(C)CC5)ccc4n3)c2-c2c(O)ccc(F)c2F)CC1,519.6,4.16,73.55,4,0.434,3.0,PASSED,Meets all criteria
+KRAS_G12D_0031,CN1CCC(n2ncc(-c3cnc4cc(N5CCNCC5)ccc4n3)c2-c2c(O)ccc(Cl)c2F)CC1,522.03,4.33,82.34,4,0.413,3.07,PASSED,Meets all criteria
+KRAS_G12D_0032,CN1CCC(n2ncc(-c3cnc4cc(N5CCNCC5)ccc4n3)c2-c2c(O)ccc(F)c2F)CC1,505.57,3.82,82.34,4,0.436,3.05,PASSED,Meets all criteria
+KRAS_G12D_0033,CN1CCN(c2cc3ncc(-c4c(-c5c(O)ccc(Cl)c5F)cnn4C4CCNCC4)nc3cc2F)CC1,540.02,4.47,82.34,4,0.396,3.21,PASSED,Meets all criteria
+KRAS_G12D_0034,CN1CCN(c2cc3ncc(-c4c(-c5c(O)ccc(F)c5F)cnn4C4CCNCC4)nc3cc2F)CC1,523.56,3.96,82.34,4,0.419,3.19,PASSED,Meets all criteria
+KRAS_G12D_0035,CN1CCN(c2cc3ncc(-c4cnn(C5CCNCC5)c4-c4ccc(F)cc4F)nc3cc2F)CC1,507.56,4.25,62.11,4,0.446,2.99,PASSED,Meets all criteria
+KRAS_G12D_0036,CN1CCN(c2ccc3cc(-c4c(-c5c(O)ccc(Cl)c5F)cnn4C4CCNCC4)c(F)nc3c2)CC1,539.03,5.08,-,-,-,-,REJECTED,Flagged by PAINS / Brenk structural alert
+KRAS_G12D_0037,CN1CCN(c2ccc3cc(-c4c(-c5c(O)ccc(F)c5F)cnn4C4CCNCC4)c(F)nc3c2)CC1,522.58,4.56,-,-,-,-,REJECTED,Flagged by PAINS / Brenk structural alert
+KRAS_G12D_0038,CN1CCN(c2ccc3cc(Cl)c(-c4c(-c5ccc(F)c(F)c5O)cnn4C4CCNCC4)nc3c2)CC1,539.03,5.08,69.45,4,0.378,3.12,PASSED,Meets all criteria
+KRAS_G12D_0039,CN1CCN(c2ccc3cc(F)c(-c4c(-c5ccc(F)c(F)c5O)cnn4C4CCNCC4)nc3c2)CC1,522.58,4.56,69.45,4,0.41,3.12,PASSED,Meets all criteria
+KRAS_G12D_0040,CN1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(Cl)c5F)cnn4C4CCNCC4)c(Cl)cc3c2)CC1,555.49,5.59,-,-,-,-,REJECTED,Failed LogP: 5.59 (target -0.5 to 5.5)
+KRAS_G12D_0041,CN1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(Cl)c5F)cnn4C4CCNCC4)c(F)cc3c2)CC1,539.03,5.08,69.45,4,0.378,3.14,PASSED,Meets all criteria
+KRAS_G12D_0042,CN1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(Cl)c5F)cnn4C4CCNCC4)cnc3c2)CC1,522.03,4.33,82.34,4,0.413,3.11,PASSED,Meets all criteria
+KRAS_G12D_0043,CN1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(Cl)c5F)cnn4C4CCNCC4)nc(F)c3c2)CC1,540.02,4.47,82.34,4,0.37,3.24,PASSED,Meets all criteria
+KRAS_G12D_0044,CN1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(F)c5F)cnn4C4CCNCC4)c(Cl)cc3c2)CC1,539.03,5.08,69.45,4,0.378,3.12,PASSED,Meets all criteria
+KRAS_G12D_0045,CN1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(F)c5F)cnn4C4CCNCC4)c(F)cc3c2)CC1,522.58,4.56,69.45,4,0.41,3.12,PASSED,Meets all criteria
+KRAS_G12D_0046,CN1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(F)c5F)cnn4C4CCNCC4)cnc3c2)CC1,505.57,3.82,82.34,4,0.436,3.09,PASSED,Meets all criteria
+KRAS_G12D_0047,CN1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(F)c5F)cnn4C4CCNCC4)nc(F)c3c2)CC1,523.56,3.96,82.34,4,0.392,3.22,PASSED,Meets all criteria
+KRAS_G12D_0048,CN1CCN(c2ccc3nc(-c4cnn(C5CCNCC5)c4-c4cccc(F)c4F)c(F)nc3c2)CC1,507.56,4.25,62.11,4,0.446,3.09,PASSED,Meets all criteria
+KRAS_G12D_0049,CN1CCN(c2nc3cc(Cl)ccc3nc2-c2c(-c3c(O)ccc(F)c3F)cnn2C2CCNCC2)CC1,540.02,4.47,82.34,4,0.396,3.12,PASSED,Meets all criteria
+KRAS_G12D_0050,CN1CCN(c2nc3cc(F)ccc3nc2-c2c(-c3c(O)ccc(F)c3F)cnn2C2CCNCC2)CC1,523.56,3.96,82.34,4,0.419,3.13,PASSED,Meets all criteria
+KRAS_G12D_0051,CN1CCN(c2nc3cccc(Cl)c3nc2-c2c(-c3c(O)ccc(Cl)c3F)cnn2C2CCNCC2)CC1,556.47,4.99,82.34,4,0.367,3.19,PASSED,Meets all criteria
+KRAS_G12D_0052,CN1CCN(c2nc3cccc(Cl)c3nc2-c2c(-c3c(O)ccc(F)c3F)cnn2C2CCNCC2)CC1,540.02,4.47,82.34,4,0.396,3.17,PASSED,Meets all criteria
+KRAS_G12D_0053,CN1CCN(c2nc3ccccc3nc2N2CCN(C(=O)c3ccc(F)c(F)c3)CC2)CC1,452.51,2.62,55.81,3,0.609,2.33,PASSED,Meets all criteria
+KRAS_G12D_0054,COc1nc2cc(N3CCN(C)CC3)ccc2nc1-c1c(-c2c(O)ccc(F)c2F)cnn1C1CCNCC1,535.6,3.83,91.57,5,0.399,3.17,PASSED,Meets all criteria
+KRAS_G12D_0055,COc1nc2cc(N3CCNCC3)ccc2nc1-c1c(-c2c(O)ccc(Cl)c2F)cnn1C1CCNCC1,538.03,4.0,100.36,5,0.351,3.24,PASSED,Meets all criteria
+KRAS_G12D_0056,COc1nc2cc(N3CCNCC3)ccc2nc1-c1c(-c2c(O)ccc(F)c2F)cnn1C1CCNCC1,521.57,3.49,100.36,5,0.367,3.23,PASSED,Meets all criteria
+KRAS_G12D_0057,CS(=O)(=O)N1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(Cl)c5F)cnn4C4CCNCC4)cnc3c2)CC1,586.09,3.66,-,-,-,-,REJECTED,Failed MW: 586.1 (target 300-580)
+KRAS_G12D_0058,CS(=O)(=O)N1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(F)c5F)cnn4C4CCNCC4)cnc3c2)CC1,569.64,3.15,116.48,5,0.377,3.19,PASSED,Meets all criteria
+KRAS_G12D_0059,Fc1ccc(-c2c(-c3cnc4cc(N5CCNCC5)c(F)cc4n3)cnn2C2CCNCC2)c(F)c1,493.54,3.91,70.9,4,0.449,3.04,PASSED,Meets all criteria
+KRAS_G12D_0060,Fc1cccc(-c2c(-c3nc4ccc(N5CCNCC5)cc4nc3F)cnn2C2CCNCC2)c1F,493.54,3.91,70.9,4,0.449,3.15,PASSED,Meets all criteria
+KRAS_G12D_0061,N#CCN1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(Cl)c5F)cnn4C4CCNCC4)cnc3c2)CC1,547.04,4.23,-,-,-,-,REJECTED,Flagged by PAINS / Brenk structural alert
+KRAS_G12D_0062,N#CCN1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(F)c5F)cnn4C4CCNCC4)cnc3c2)CC1,530.58,3.71,-,-,-,-,REJECTED,Flagged by PAINS / Brenk structural alert
+KRAS_G12D_0063,NC1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(Cl)c5F)cnn4C4CCNCC4)cnc3c2)CC1,522.03,4.51,105.12,4,0.363,3.2,PASSED,Meets all criteria
+KRAS_G12D_0064,NC1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(F)c5F)cnn4C4CCNCC4)cnc3c2)CC1,505.57,4.0,105.12,4,0.385,3.18,PASSED,Meets all criteria
+KRAS_G12D_0065,O=C(c1ccc(Cl)c(F)c1)N1CCN(c2nc3ccccc3nc2N2CCNCC2)CC1,454.94,2.79,64.6,3,0.656,2.41,PASSED,Meets all criteria
+KRAS_G12D_0066,O=C(c1ccc(F)c(F)c1)N1CCN(c2nc3ccccc3nc2N2CCNCC2)CC1,438.48,2.28,64.6,3,0.677,2.39,PASSED,Meets all criteria
+KRAS_G12D_0067,OCCN1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(Cl)c5F)cnn4C4CCNCC4)cnc3c2)CC1,552.05,3.7,-,-,-,-,REJECTED,Low drug-likeness: QED 0.33 (<0.35)
+KRAS_G12D_0068,OCCN1CCN(c2ccc3nc(-c4c(-c5c(O)ccc(F)c5F)cnn4C4CCNCC4)cnc3c2)CC1,535.6,3.18,-,-,-,-,REJECTED,Low drug-likeness: QED 0.35 (<0.35)
+KRAS_G12D_0069,Oc1ccc(Cl)c(-c2cnn(C3CCNCC3)c2-c2nc3ccc(F)cc3cc2F)c1F,458.87,5.47,62.97,3,0.427,3.05,PASSED,Meets all criteria
+KRAS_G12D_0070,Oc1ccc(Cl)c(F)c1-c1cnn(C2CCNCC2)c1-c1cnc2cc(N3CCC(F)CC3)ccc2n1,525.0,5.52,-,-,-,-,REJECTED,Failed LogP: 5.52 (target -0.5 to 5.5)
+KRAS_G12D_0071,Oc1ccc(Cl)c(F)c1-c1cnn(C2CCNCC2)c1-c1cnc2cc(N3CCC(O)CC3)ccc2n1,523.01,4.54,99.33,4,0.362,3.17,PASSED,Meets all criteria
+KRAS_G12D_0072,Oc1ccc(Cl)c(F)c1-c1cnn(C2CCNCC2)c1-c1cnc2cc(N3CCNCC3)c(Cl)cc2n1,542.45,4.65,-,-,-,-,REJECTED,Low drug-likeness: QED 0.35 (<0.35)
+KRAS_G12D_0073,Oc1ccc(Cl)c(F)c1-c1cnn(C2CCNCC2)c1-c1nc2c(F)cccc2nc1N1CCNCC1,525.99,4.13,91.13,4,0.369,3.25,PASSED,Meets all criteria
+KRAS_G12D_0074,Oc1ccc(F)c(-c2cnn(C3CCNCC3)c2-c2nc3ccc(F)cc3cc2F)c1F,442.42,4.95,62.97,3,0.441,3.05,PASSED,Meets all criteria
+KRAS_G12D_0075,Oc1ccc(F)c(F)c1-c1cnn(C2CCNCC2)c1-c1cnc2cc(N3CCC(F)CC3)ccc2n1,508.55,5.01,79.1,4,0.404,3.23,PASSED,Meets all criteria
+KRAS_G12D_0076,Oc1ccc(F)c(F)c1-c1cnn(C2CCNCC2)c1-c1cnc2cc(N3CCC(O)CC3)ccc2n1,506.56,4.03,99.33,4,0.384,3.15,PASSED,Meets all criteria
+KRAS_G12D_0077,Oc1ccc(F)c(F)c1-c1cnn(C2CCNCC2)c1-c1cnc2cc(N3CCNCC3)c(Cl)cc2n1,525.99,4.13,91.13,4,0.369,3.26,PASSED,Meets all criteria
+KRAS_G12D_0078,Oc1ccc(F)c(F)c1-c1cnn(C2CCNCC2)c1-c1nc2c(F)cccc2nc1N1CCNCC1,509.54,3.62,91.13,4,0.387,3.24,PASSED,Meets all criteria

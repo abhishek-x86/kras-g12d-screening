@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+priors/
+checkpoints/
+kras/
+tb_logs*/
