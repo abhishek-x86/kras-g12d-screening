@@ -1,0 +1,8 @@
+numpy
+pandas
+rdkit
+meeko
+vina
+tqdm
+matplotlib
+pytest

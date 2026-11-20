@@ -44,6 +44,14 @@ End-to-end computational drug discovery pipeline targeting the **KRAS G12D Switc
 
 ## Key Benchmark Results
 
+### Visual Analysis & Top Candidate Structures
+
+![Binding Affinity vs Drug-Likeness](figures/pareto_affinity_vs_qed.png)
+
+![REINVENT 4 RL Trajectory](figures/rl_learning_trajectory.png)
+
+![Top 6 KRAS G12D Leads](figures/top_leads_grid.png)
+
 ### Targeted Switch-II Virtual Screen (`kras_screening_output/kras_final_ranked_leads.csv`)
 Across 78 evaluated candidates (72 successfully docked; 9 exhibiting favorable $\Delta G < 0\text{ kcal/mol}$):
 
