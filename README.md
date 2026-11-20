@@ -70,6 +70,22 @@ Across 78 evaluated candidates (72 successfully docked; 9 exhibiting favorable $
 
 ---
 
+### High-Precision Re-Docking & Mutant `Asp12` Interaction Validation (`validation_hits.py` & `check_interactions.py`)
+
+To eliminate fast-docking conformer artifacts, top RL candidates were energy-minimized (`MMFF94`, 500 iterations), centered in the Switch-II pocket, and re-docked at `exhaustiveness=16` with local gradient optimization:
+
+| Candidate | Strict Vina $\Delta G$ (kcal/mol) | QED | Mutant `Asp12` Contact | Key Switch-II Pocket Contacts (< 4.0 Å) |
+| :--- | :---: | :---: | :---: | :--- |
+| **`RL_Top_03`** | **-9.11** | 0.79 | **Yes** (3.57 Å) | `ASP69` (2.3Å), `ARG68` (2.6Å), `TYR96` (2.6Å), `GLU63` (2.9Å) |
+| **`RL_Top_01`** | **-8.99** | **0.84** | **Yes** (2.94 Å) | `ASP69` (1.6Å), `ARG68` (2.6Å), `ASP12` (2.9Å), `TYR96` (3.2Å) |
+| **`RL_Top_04`** | **-8.74** | 0.78 | No (>4.0 Å) | `GLU63` (2.0Å), `TYR96` (2.4Å), `ASP69` (2.7Å), `ARG68` (2.8Å) |
+| **`RL_Top_02`** | **-8.71** | 0.79 | **Yes (2.82 Å, Polar/H-bond)** | `ARG68` (2.4Å), `GLU63` (2.7Å), `TYR96` (2.7Å), `ASP12` (2.8Å) |
+| **`RL_Top_05`** | **-8.37** | **0.92** | **Yes** (2.57 Å) | `ARG68` (1.8Å), `HIS95` (2.1Å), `TYR96` (2.4Å), `ASP12` (2.6Å) |
+| `KRAS_G12D_0035` | -7.43 | 0.45 | No (>4.0 Å) | `GLU63` (2.7Å), `GLU37` (2.7Å), `TYR71` (2.8Å), `ARG68` (3.1Å) |
+| `MRTX1133_Ref` | -7.37 | 0.41 | No (>4.0 Å) | `TYR71` (2.1Å), `GLU63` (2.3Å), `GLU37` (2.9Å), `ARG68` (3.3Å) |
+
+* **Mutant Selectivity Highlight (`RL_Top_02`):** Forms a direct `2.82 Å` polar/hydrogen-bond interaction with the oncogenic **Asp12** carboxylate alongside canonical Switch-II anchors (**Arg68**, **Glu63**, **Tyr96**), providing a structural basis for G12D mutant selectivity.
+
 ## Quickstart
 
 ### 1. Run Targeted Virtual Screening
