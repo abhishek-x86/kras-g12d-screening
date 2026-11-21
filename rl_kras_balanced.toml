@@ -1,0 +1,102 @@
+run_type = "staged_learning"
+device = "cuda"
+tb_logdir = "tb_logs_balanced"
+json_out_config = "rl_kras_balanced_out.json"
+
+[parameters]
+prior_file = "priors/reinvent.prior"
+agent_file = "priors/reinvent.prior"
+summary_csv_prefix = "results/kras_g12d_balanced"
+batch_size = 32
+randomize_smiles = true
+
+[learning_strategy]
+type = "dap"
+sigma = 128
+rate = 0.0001
+
+[diversity_filter]
+type = "IdenticalMurckoScaffold"
+bucket_size = 25
+minscore = 0.45
+penalty_multiplier = 0.5
+
+[[stage]]
+chkpt_file = "checkpoints/stage_balanced.chkpt"
+max_score = 0.88
+min_steps = 20
+max_steps = 100
+
+[stage.scoring]
+type = "geometric_mean"
+
+# 1. Switch-II Affinity + Smooth Mutant Asp12 Polar Gradient (45%)
+[[stage.scoring.component]]
+[stage.scoring.component.ExternalProcess]
+[[stage.scoring.component.ExternalProcess.endpoint]]
+name = "SwitchII_Asp12_Docking"
+weight = 0.45
+[stage.scoring.component.ExternalProcess.endpoint.params]
+executable = "python"
+args = "vina_worker_balanced.py"
+property = "docking_score"
+
+# 2. Route-Agnostic Synthetic Accessibility (20% - favors 3-5 step synthesis, SA ~ 2.2-3.8)
+[[stage.scoring.component]]
+[stage.scoring.component.SAScore]
+[[stage.scoring.component.SAScore.endpoint]]
+name = "Synthetic_Accessibility"
+weight = 0.20
+transform.type = "reverse_sigmoid"
+transform.high = 4.5
+transform.low = 2.2
+transform.k = 0.5
+
+# 3. Solubility & Cell Permeability Window (15% - smooth SLogP sweet spot 0.8 to 4.5)
+[[stage.scoring.component]]
+[stage.scoring.component.SlogP]
+[[stage.scoring.component.SlogP.endpoint]]
+name = "Balanced_SLogP"
+weight = 0.15
+transform.type = "double_sigmoid"
+transform.high = 4.8
+transform.low = 0.5
+transform.coef_div = 5.0
+transform.coef_si = 10.0
+transform.coef_se = 10.0
+
+# 4. 3D Shape Complexity / Escape from Flatland (10% - reduces hERG & promiscuity)
+[[stage.scoring.component]]
+[stage.scoring.component.FractionCSP3]
+[[stage.scoring.component.FractionCSP3.endpoint]]
+name = "3D_Complexity_Fsp3"
+weight = 0.10
+transform.type = "sigmoid"
+transform.high = 0.35
+transform.low = 0.15
+transform.k = 0.5
+
+# 5. General Drug-Likeness (10%)
+[[stage.scoring.component]]
+[stage.scoring.component.QED]
+[[stage.scoring.component.QED.endpoint]]
+name = "Drug_Likeness_QED"
+weight = 0.10
+
+# 6. Essential Chemical Stability Guardrail (blocks only true reactive/unstable motifs)
+[[stage.scoring.component]]
+[stage.scoring.component.custom_alerts]
+[[stage.scoring.component.custom_alerts.endpoint]]
+name = "Chemical_Stability_Alerts"
+params.smarts = [
+    "[*;r8]",
+    "[*;r9]",
+    "[*;r10]",
+    "[#8][#8]",
+    "[#6](=[O,S])[O,S][#6](=[O,S])",
+    "[C,c](=[O])[F,Cl,Br,I]",
+    "[N+](=O)[O-]",
+    "[#16;!s][#16;!s]",
+    "[NX3][NX3]",
+    "[#6]=[#6]-[C,c](=[O])"
+]
