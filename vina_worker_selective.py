@@ -14,7 +14,6 @@ RECEPTOR = str(BASE_DIR / "7RT1_fixed_receptor.pdbqt")
 CENTER = [-1.810, -1.541, -25.541]
 BOX_SIZE = [18.0, 18.0, 18.0]
 
-# Extract mutant ASP12 carboxylate oxygens (OD1, OD2) for selectivity reward
 ASP12_OXYGENS = []
 with open(RECEPTOR) as f:
     for line in f:
@@ -75,7 +74,9 @@ def evaluate_mol(smi):
         params = AllChem.ETKDGv3()
         params.randomSeed = 42
         if AllChem.EmbedMolecule(mol_h, params) != 0:
-            return 0.0
+            params.useRandomCoords = True
+            if AllChem.EmbedMolecule(mol_h, params) != 0:
+                return 0.0
 
         AllChem.MMFFOptimizeMolecule(mol_h, maxIters=200)
 
@@ -112,8 +113,6 @@ def evaluate_mol(smi):
 
         base_reward = np.clip((-aff - 3.0) / 6.0, 0.0, 1.0)
         asp_dist = min_asp12_polar_dist(pose_str)
-
-        # Selectivity multiplier: reward polar/salt-bridge contact (<= 3.3 Å) with mutant Asp12
         selectivity_bonus = 1.0 if asp_dist <= 3.3 else 0.75
         return float(np.clip(base_reward * selectivity_bonus, 0.0, 1.0))
     except Exception:

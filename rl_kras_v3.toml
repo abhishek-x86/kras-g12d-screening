@@ -1,0 +1,78 @@
+run_type = "staged_learning"
+device = "cuda"
+tb_logdir = "tb_logs_v3"
+json_out_config = "rl_kras_v3_out.json"
+
+[parameters]
+prior_file = "priors/reinvent.prior"
+agent_file = "priors/reinvent.prior"
+summary_csv_prefix = "results/kras_g12d_rl_v3"
+batch_size = 32
+randomize_smiles = true
+
+[learning_strategy]
+type = "dap"
+sigma = 128
+rate = 0.0001
+
+[diversity_filter]
+type = "IdenticalMurckoScaffold"
+bucket_size = 25
+minscore = 0.45
+penalty_multiplier = 0.5
+
+[[stage]]
+chkpt_file = "checkpoints/stage_v3.chkpt"
+max_score = 0.88
+min_steps = 20
+max_steps = 120
+
+[stage.scoring]
+type = "geometric_mean"
+
+# 1. Switch-II Affinity + Mutant Asp12 Polar Selectivity Bonus
+[[stage.scoring.component]]
+[stage.scoring.component.ExternalProcess]
+[[stage.scoring.component.ExternalProcess.endpoint]]
+name = "Selective_Asp12_Docking"
+weight = 0.55
+[stage.scoring.component.ExternalProcess.endpoint.params]
+executable = "python"
+args = "vina_worker_selective.py"
+property = "docking_score"
+
+# 2. Route-Agnostic Synthetic Accessibility (rewards easy 3-5 step synthesis, SA <= 3.5)
+[[stage.scoring.component]]
+[stage.scoring.component.SAScore]
+[[stage.scoring.component.SAScore.endpoint]]
+name = "Synthetic_Accessibility"
+weight = 0.25
+transform.type = "reverse_sigmoid"
+transform.high = 4.5
+transform.low = 2.0
+transform.k = 0.5
+
+# 3. General Drug-Likeness (QED)
+[[stage.scoring.component]]
+[stage.scoring.component.QED]
+[[stage.scoring.component.QED.endpoint]]
+name = "Drug_Likeness_QED"
+weight = 0.20
+
+# 4. Preclinical Metabolic & Reactive Liability Filter
+[[stage.scoring.component]]
+[stage.scoring.component.custom_alerts]
+[[stage.scoring.component.custom_alerts.endpoint]]
+name = "Preclinical_Stability_Alerts"
+params.smarts = [
+    "[*;r8]",
+    "[*;r9]",
+    "[*;r10]",
+    "[#8][#8]",
+    "[#6](=[O,S])[O,S][#6](=[O,S])",
+    "[#6](=[O])[#6][#6](=[O])",
+    "[C,c](=[O])[F,Cl,Br,I]",
+    "[N+](=O)[O-]",
+    "[#16;!s][#16;!s]",
+    "C#C"
+]
