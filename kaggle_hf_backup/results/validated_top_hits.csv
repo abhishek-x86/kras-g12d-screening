@@ -1,0 +1,8 @@
+Candidate,Strict_DeltaG_kcal_mol,MW,LogP,QED,SMILES
+RL_Top_03,-9.11,329.4,1.11,0.79,CC1CCN(C(=O)COC(=O)c2cc(=O)n3ccccc3n2)CC1
+RL_Top_01,-8.99,350.5,3.5,0.84,Cc1cc(C)cc(C(=O)C2CCN(Cc3cccc(C(N)=O)c3)CC2)c1
+RL_Top_04,-8.74,292.3,1.14,0.78,O=C1CCCC(=O)C1C1=NS(=O)(=O)c2ccccc2N1
+RL_Top_02,-8.71,390.8,3.69,0.79,O=C(c1cccc(C(F)(F)F)c1Cl)N1CCCCC1CN1CCOCC1
+RL_Top_05,-8.37,323.4,2.66,0.92,CCC1(c2ccc(OC)cc2)N=C(N)N(Cc2ccccc2)C1=O
+KRAS_G12D_0035,-7.43,507.6,4.25,0.45,CN1CCN(c2cc3ncc(-c4cnn(C5CCNCC5)c4-c4ccc(F)cc4F)nc3cc2F)CC1
+MRTX1133_Ref,-7.37,522.6,4.56,0.41,CN1CCN(CC1)c2ccc3nc(c(cc3c2)F)c4c(cnn4C5CCNCC5)c6c(ccc(c6F)F)O

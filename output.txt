@@ -1,0 +1,5 @@
+[INFO] Receptor G12D : 7RT1_fixed_receptor.pdbqt
+[INFO] Switch-II Box : center=(3.39, 5.67, -21.63), Asp12=(9.10, 1.20, -20.77)
+[INFO] Loaded 1600 generated molecules from ./kaggle_hf_backup/results/kras_g12d_balanced_1.csv
+[FUNNEL] Raw: 1600 -> Unique Valid: 1573 -> PAINS/Brenk/NIH Clean: 936 -> Novel (Tanimoto<0.45): 936
+[INFO] Running exhaustive 3D docking (exhaustiveness=16, workers=7) on top 150 candidates...
