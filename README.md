@@ -86,6 +86,23 @@ To eliminate fast-docking conformer artifacts, top RL candidates were energy-min
 
 * **Mutant Selectivity Highlight (`RL_Top_02`):** Forms a direct `2.82 Å` polar/hydrogen-bond interaction with the oncogenic **Asp12** carboxylate alongside canonical Switch-II anchors (**Arg68**, **Glu63**, **Tyr96**), providing a structural basis for G12D mutant selectivity.
 
+
+### Preclinical Viability, Wild-Type Selectivity & Retrosynthesis (`medchem_audit.py`, `selectivity_screen.py`, `retrosynthesis_check.py`)
+
+To ensure generated leads are synthesizable and viable across parenteral (IV/subcutaneous) or oral routes, top validated candidates were audited for synthetic accessibility (`SA_Score`), structural/metabolic alerts (`PAINS`, `Brenk`, `NIH`), selectivity against healthy Wild-Type KRAS (`Asp12 -> Gly12` in silico reversion), and BRICS retrosynthetic building-block decomposition:
+
+| Candidate | G12D $\Delta G$ (kcal/mol) | WT `Gly12` $\Delta G$ | Selectivity $\Delta\Delta G$ | `SA_Score` | BRICS Bricks / Steps | Preclinical Gate |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **`RL_Top_02`** | **-8.71** | -8.57 | **-0.14 (Selective)** | **2.80** | 6 bricks / 5 steps | **PASS** (0 alerts; `2.82 Å` `Asp12` polar contact) |
+| **`RL_Top_03`** | **-9.11** | -9.70 | +0.59 (Pan-KRAS) | **2.30** | 5 bricks / 4 steps | **PASS** (0 alerts) |
+| **`RL_Top_01`** | **-8.99** | -9.29 | +0.30 (Pan-KRAS) | **2.03** | 6 bricks / 5 steps | **PASS** (0 alerts) |
+| **`RL_Top_05`** | **-8.37** | -8.49 | +0.12 (Pan-KRAS) | **2.84** | — | **PASS** (0 alerts; `2.57 Å` `Asp12` contact) |
+| `RL_Top_04` | -8.74 | — | — | 2.88 | — | **FLAGGED** (`beta-keto/anhydride` instability) |
+| `MRTX1133_Ref` | -7.37 | -7.36 | -0.01 | 3.12 | 5 bricks / 4 steps | **PASS** (0 alerts; Parenteral PK profile) |
+
+![Retrosynthetic Building Blocks](figures/building_blocks_grid.png)
+
+
 ## Quickstart
 
 ### 1. Run Targeted Virtual Screening
