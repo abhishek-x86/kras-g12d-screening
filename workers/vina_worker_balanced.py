@@ -10,7 +10,7 @@ from meeko import MoleculePreparation, PDBQTWriterLegacy
 from vina import Vina
 
 BASE_DIR = Path(__file__).resolve().parent
-RECEPTOR = str(BASE_DIR / "7RT1_fixed_receptor.pdbqt")
+RECEPTOR = str(BASE_DIR / "receptors/7RT1_fixed_receptor.pdbqt")
 CENTER = [-1.810, -1.541, -25.541]
 BOX_SIZE = [18.0, 18.0, 18.0]
 N_CPUS = max(2, os.cpu_count() or 4)

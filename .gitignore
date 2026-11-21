@@ -1,7 +1,21 @@
+# Virtual environments & caches
+kras/
+.venv/
 __pycache__/
 *.pyc
-.ipynb_checkpoints/
+.env
+
+# Large model weights, checkpoints & logs (stored on Hugging Face)
 priors/
 checkpoints/
-kras/
+*.chkpt
+*.prior
 tb_logs*/
+
+# Temporary local scratch & benchmark output directories
+kaggle_hf_backup/
+kaggle_run_*/
+exhaustive_benchmark_out/
+output.txt
+rl_kras_out.json
+*.zip

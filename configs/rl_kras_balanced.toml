@@ -38,7 +38,7 @@ name = "SwitchII_Asp12_Docking"
 weight = 0.45
 [stage.scoring.component.ExternalProcess.endpoint.params]
 executable = "python"
-args = "vina_worker_balanced.py"
+args = "workers/vina_worker_balanced.py"
 property = "docking_score"
 
 # 2. Route-Agnostic Synthetic Accessibility (20% - favors 3-5 step synthesis, SA ~ 2.2-3.8)

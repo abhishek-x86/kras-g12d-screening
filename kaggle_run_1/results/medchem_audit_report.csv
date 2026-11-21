@@ -1,8 +1,0 @@
-Candidate,Strict_DeltaG,MW,LogP,SA_Score,Structural_Alerts,Suggested_Route,Preclinical_Viable
-RL_Top_03,-9.11,329.4,1.11,2.3,CLEAN (0 alerts),Oral / IV / SC,PASS
-RL_Top_01,-8.99,350.5,3.5,2.03,CLEAN (0 alerts),Oral / IV / SC,PASS
-RL_Top_04,-8.74,292.3,1.14,2.88,beta-keto/anhydride,Oral / IV / SC,FLAGGED
-RL_Top_02,-8.71,390.8,3.69,2.8,CLEAN (0 alerts),Oral / IV / SC,PASS
-RL_Top_05,-8.37,323.4,2.66,2.84,CLEAN (0 alerts),Oral / IV / SC,PASS
-KRAS_G12D_0035,-7.43,507.6,4.25,2.99,CLEAN (0 alerts),Parenteral (IV / Subcutaneous),PASS
-MRTX1133_Ref,-7.37,522.6,4.56,3.12,CLEAN (0 alerts),Parenteral (IV / Subcutaneous),PASS
