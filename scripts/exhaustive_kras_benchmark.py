@@ -5,11 +5,11 @@ Exhaustive In Silico Validation & Lead Prioritization Benchmark for KRAS G12D In
 Pipeline Gates:
   1. Chemical Sanitization, Deduplication & Physicochemical/ADME Profiling
   2. Structural Alert Filtering (PAINS A/B/C, Brenk, NIH + Custom Reactive Warheads)
-  3. Patent / Literature Novelty Audit (ECFP4 Tanimoto vs. Known KRAS G12D Clinical/Preclinical Ligands)
-  4. Physiological pH (7.4) Protonation & Formal Charge Verification (Dimorphite-DL / OpenBabel / RDKit fallback)
+  3. Literature Similarity Audit (ECFP4 Tanimoto vs. Known KRAS G12D Clinical/Preclinical Ligands)
+  4. Physiological pH (7.4) Protonation & Formal Charge Verification (OpenBabel / RDKit fallback)
   5. High-Exhaustiveness KRAS G12D Switch-II Docking (AutoDock Vina, exhaustiveness=16/32)
-  6. 3D Pocket Pharmacophore & Interaction Audit (Asp12 Salt-Bridge Distance, Glu62/His95/Tyr96 Contacts)
-  7. Internal Conformational Strain Energy Audit (MMFF94 Bound-vs-Global-Minimum Conformer Delta-E)
+  6. 3D Pocket Pharmacophore & Interaction Audit (True Asp12 N+ Salt-Bridge Geometry, Glu62/His95/Tyr96 Contacts)
+  7. Internal Conformational Strain Energy Audit (MMFF94s Bound-vs-Global-Minimum Conformer Delta-E)
   8. Wild-Type KRAS Counter-Screening (Mutant vs. WT Selectivity Margin Delta-Delta-G)
   9. Retrosynthetic Disconnection (BRICS Fragmentation & Step Complexity) + Composite MPO Ranking
 """
@@ -18,10 +18,8 @@ import argparse
 import json
 import math
 import os
-import re
 import subprocess
 import sys
-import tempfile
 import warnings
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
@@ -39,6 +37,7 @@ from rdkit.Chem import (
     FilterCatalog,
     Lipinski,
     QED,
+    rdFingerprintGenerator,
     rdMolDescriptors,
 )
 from rdkit.Chem.FilterCatalog import FilterCatalogParams
@@ -46,11 +45,10 @@ from rdkit.Chem.MolStandardize import rdMolStandardize
 from rdkit.Contrib.SA_Score import sascorer
 
 RDLogger.DisableLog("rdApp.*")
-from rdkit.Chem import rdFingerprintGenerator
 warnings.filterwarnings("ignore")
 
 try:
-    from meeko import MoleculePreparation, PDBQTWriterLegacy, RDKitMolCreate
+    from meeko import MoleculePreparation, PDBQTMolecule, PDBQTWriterLegacy, RDKitMolCreate
     HAS_MEEKO = True
 except ImportError:
     HAS_MEEKO = False
@@ -63,7 +61,7 @@ except ImportError:
 
 
 # =============================================================================
-# REFERENCE LITERATURE INHIBITORS FOR NOVELTY & BENCHMARK ANCHORING
+# REFERENCE LITERATURE INHIBITORS FOR SIMILARITY & BENCHMARK ANCHORING
 # =============================================================================
 REFERENCE_KRAS_INHIBITORS: Dict[str, str] = {
     "MRTX1133": "C[C@H]1CN(c2nc(OC[C@@]34CCCN3C[C@H](F)C4)nc3c2CCN(c2cccc4cccc(Cl)c24)C3)CCN1",
@@ -283,7 +281,6 @@ class MedicinalChemistryAuditor:
         prot_mol = Chem.MolFromSmiles(prot_smi)
         formal_charge_ph74 = Chem.GetFormalCharge(prot_mol) if prot_mol is not None else 0
 
-        # BRICS retrosynthetic disconnection proxy
         try:
             brics_frags = BRICS.BRICSDecompose(mol)
             n_building_blocks = len(brics_frags)
@@ -315,7 +312,7 @@ class MedicinalChemistryAuditor:
 # =============================================================================
 def prepare_3d_conformer_and_pdbqt(prot_smi: str) -> Optional[Tuple[Chem.Mol, str, float]]:
     """
-    Generates an ETKDGv3 3D conformer, minimizes with MMFF94 to get global-minimum
+    Generates an ETKDGv3 3D conformer ensemble, minimizes with MMFF94s to get global-minimum
     internal strain baseline energy (kcal/mol), and exports Meeko PDBQT string.
     """
     mol = Chem.MolFromSmiles(prot_smi)
@@ -330,7 +327,6 @@ def prepare_3d_conformer_and_pdbqt(prot_smi: str) -> Optional[Tuple[Chem.Mol, st
         if AllChem.EmbedMolecule(mol, AllChem.ETKDG()) != 0:
             return None
 
-    # Generate ensemble of 10 conformers to find lowest free-solution energy baseline
     cids = AllChem.EmbedMultipleConfs(mol, numConfs=10, params=params)
     min_free_energy = float("inf")
     best_cid = 0
@@ -358,7 +354,7 @@ def prepare_3d_conformer_and_pdbqt(prot_smi: str) -> Optional[Tuple[Chem.Mol, st
     if math.isinf(min_free_energy):
         min_free_energy = 0.0
 
-    # Keep only best conformer for PDBQT export
+    # Deep copy conformer before RemoveAllConformers() to prevent C++ SWIG MemoryError
     single_mol = Chem.Mol(mol)
     conf = Chem.Conformer(single_mol.GetConformer(best_cid))
     single_mol.RemoveAllConformers()
@@ -405,25 +401,90 @@ def parse_vina_pose_coords(pdbqt_pose_str: str) -> Tuple[List[np.ndarray], List[
     return heavy_coords, polar_coords
 
 
+def evaluate_true_asp12_salt_bridge(
+    ref_mol: Chem.Mol, heavy_pts: List[np.ndarray], asp12_coord: Tuple[float, float, float]
+) -> Tuple[bool, float]:
+    """
+    Requires a formal +1 basic nitrogen within <= 4.0 A of Asp12 carboxylate
+    and directional C-N+...O geometry (>= 105 deg).
+    """
+    heavy_atoms = [a for a in ref_mol.GetAtoms() if a.GetAtomicNum() > 1]
+    if len(heavy_atoms) != len(heavy_pts):
+        return False, np.nan
+
+    pos_n_indices = [
+        i for i, a in enumerate(heavy_atoms)
+        if a.GetAtomicNum() == 7 and a.GetFormalCharge() > 0
+    ]
+    if not pos_n_indices:
+        return False, np.nan
+
+    asp12_pt = np.array(asp12_coord, dtype=float)
+    full_to_heavy = {a.GetIdx(): idx for idx, a in enumerate(heavy_atoms)}
+    best_dist = float("inf")
+    salt_bridge_ok = False
+
+    for h_idx in pos_n_indices:
+        n_pt = heavy_pts[h_idx]
+        dist = float(np.linalg.norm(n_pt - asp12_pt))
+        if dist < best_dist:
+            best_dist = dist
+
+        if dist <= 4.0:
+            nbrs = [nb.GetIdx() for nb in heavy_atoms[h_idx].GetNeighbors() if nb.GetAtomicNum() > 1]
+            nbr_pts = [heavy_pts[full_to_heavy[ni]] for ni in nbrs if ni in full_to_heavy]
+            if nbr_pts:
+                v1 = n_pt - np.mean(nbr_pts, axis=0)
+                v2 = asp12_pt - n_pt
+                denom = np.linalg.norm(v1) * np.linalg.norm(v2)
+                angle_deg = (
+                    float(np.degrees(np.arccos(np.clip(np.dot(v1, v2) / denom, -1.0, 1.0))))
+                    if denom > 1e-6
+                    else 135.0
+                )
+                if angle_deg >= 105.0:
+                    salt_bridge_ok = True
+            else:
+                salt_bridge_ok = True
+
+    return salt_bridge_ok, (round(best_dist, 2) if best_dist < float("inf") else np.nan)
+
+
 def compute_bound_strain_energy(ref_mol: Chem.Mol, docked_pdbqt_str: str, min_free_energy: float) -> float:
     """
-    Maps docked PDBQT heavy-atom coordinates back onto the RDKit molecule via Meeko
-    and evaluates single-point MMFF94s energy of the bound pose minus global-minimum
-    solution conformer energy (Delta E_strain in kcal/mol).
+    Maps docked PDBQT heavy-atom coordinates back onto the exact protonated RDKit protomer,
+    relaxes only hydrogens (heavy atoms frozen at the Vina pose), and evaluates:
+        Delta E_strain = max(0.0, E_bound_MMFF94s - E_free_global_min)
     """
-    if not HAS_MEEKO or min_free_energy == 0.0:
+    if min_free_energy == 0.0:
         return -1.0
+
+    heavy_pts, _ = parse_vina_pose_coords(docked_pdbqt_str)
+    mol_bound = Chem.Mol(ref_mol)
+    heavy_indices = [a.GetIdx() for a in mol_bound.GetAtoms() if a.GetAtomicNum() > 1]
+
     try:
-        pmol = RDKitMolCreate.from_pdbqt_mol(
-            RDKitMolCreate.parse_pdbqt_string(docked_pdbqt_str)
-        )[0]
-        if pmol is None:
+        if len(heavy_pts) == len(heavy_indices):
+            conf = mol_bound.GetConformer(0)
+            for idx, pt in zip(heavy_indices, heavy_pts):
+                conf.SetAtomPosition(idx, pt.tolist())
+        elif HAS_MEEKO:
+            pmol_meeko = PDBQTMolecule(docked_pdbqt_str, is_dlg=False, skip_typing=True)
+            rdkit_mols = RDKitMolCreate.from_pdbqt_mol(pmol_meeko)
+            if not rdkit_mols or rdkit_mols[0] is None:
+                return -1.0
+            mol_bound = Chem.AddHs(rdkit_mols[0], addCoords=True)
+            heavy_indices = [a.GetIdx() for a in mol_bound.GetAtoms() if a.GetAtomicNum() > 1]
+        else:
             return -1.0
-        pmol_h = Chem.AddHs(pmol, addCoords=True)
-        if AllChem.MMFFHasAllMoleculeParams(pmol_h):
-            props = AllChem.MMFFGetMoleculeProperties(pmol_h, mmffVariant="MMFF94s")
-            ff = AllChem.MMFFGetMoleculeForceField(pmol_h, props)
+
+        if AllChem.MMFFHasAllMoleculeParams(mol_bound):
+            props = AllChem.MMFFGetMoleculeProperties(mol_bound, mmffVariant="MMFF94s")
+            ff = AllChem.MMFFGetMoleculeForceField(mol_bound, props, confId=0)
             if ff is not None:
+                for idx in heavy_indices:
+                    ff.AddFixedPoint(idx)
+                ff.Minimize(maxIts=200)
                 bound_e = ff.CalcEnergy()
                 return round(max(0.0, float(bound_e - min_free_energy)), 3)
     except Exception:
@@ -436,10 +497,10 @@ def dock_single_candidate(
 ) -> Dict:
     """
     Worker function executed in parallel per candidate:
-      - Generates 3D conformer + free-solution MMFF94 baseline
+      - Generates 3D conformer + free-solution MMFF94s baseline
       - Docks against KRAS G12D Switch-II pocket at high exhaustiveness
       - Saves docked PDBQT pose to disk
-      - Measures 3D distances to Asp12 (salt bridge/H-bond), Glu62, His95, Tyr96
+      - Measures 3D distances to Asp12 (true N+ salt bridge), Glu62, His95, Tyr96
       - Computes bound conformational strain Delta E_strain
       - Optionally counter-docks against Wild-Type KRAS to compute selectivity Delta-Delta-G
     """
@@ -515,6 +576,7 @@ def dock_single_candidate(
         his95_d = min_dist(heavy_pts, pocket.his95_coord)
         tyr96_d = min_dist(heavy_pts, pocket.tyr96_coord)
 
+        sb_ok, _ = evaluate_true_asp12_salt_bridge(ref_mol, heavy_pts, pocket.asp12_coord)
         strain_kcal = compute_bound_strain_energy(ref_mol, pose_pdbqt, min_free_energy)
 
         out.update(
@@ -524,7 +586,7 @@ def dock_single_candidate(
                 "Pose_Gap_kcal": round(second_aff - best_aff, 3),
                 "Ligand_Efficiency_LE": round(le, 4),
                 "Asp12_Min_Dist_A": round(asp12_d, 2) if not np.isnan(asp12_d) else np.nan,
-                "Asp12_SaltBridge_OK": bool(not np.isnan(asp12_d) and asp12_d <= 4.2),
+                "Asp12_SaltBridge_OK": bool(sb_ok),
                 "Glu62_Min_Dist_A": round(glu62_d, 2) if not np.isnan(glu62_d) else np.nan,
                 "His95_Min_Dist_A": round(his95_d, 2) if not np.isnan(his95_d) else np.nan,
                 "Tyr96_Min_Dist_A": round(tyr96_d, 2) if not np.isnan(tyr96_d) else np.nan,
@@ -563,24 +625,18 @@ def compute_composite_mpo(df: pd.DataFrame) -> pd.Series:
     Combines physics-based docking affinity, Asp12 salt-bridge formation, low conformational
     strain, scaffold novelty, QED, SAScore, and WT selectivity into a [0, 1] MPO score.
     """
-    # Normalize G12D affinity: -11.5 kcal/mol -> 1.0, -6.5 kcal/mol -> 0.0
     aff_norm = np.clip((-df["G12D_Vina_kcal"] - 6.5) / 5.0, 0.0, 1.0).fillna(0.0)
-
-    # Asp12 contact score: <= 3.6 A -> 1.0, >= 6.0 A -> 0.0
     asp12_norm = np.clip((6.0 - df["Asp12_Min_Dist_A"]) / 2.4, 0.0, 1.0).fillna(0.2)
+    # Down-weight neutral/anionic molecules on the Asp12 term
+    asp12_norm = np.where(df["Formal_Charge_pH74"] >= 1, asp12_norm, asp12_norm * 0.35)
 
-    # Conformational strain penalty: <= 3.0 kcal/mol -> 1.0, >= 10.0 kcal/mol -> 0.0
     strain_vals = df["Bound_Strain_kcal"].fillna(4.0)
     strain_norm = np.clip((10.0 - strain_vals) / 7.0, 0.0, 1.0)
 
-    # Novelty score: Tanimoto <= 0.35 -> 1.0, >= 0.70 -> 0.0
     nov_norm = np.clip((0.70 - df["Max_Ref_Tanimoto"]) / 0.35, 0.0, 1.0)
-
-    # QED & SAScore
     qed_norm = np.clip(df["QED"], 0.0, 1.0)
     sa_norm = np.clip((5.5 - df["SAScore"]) / 3.5, 0.0, 1.0)
 
-    # WT Selectivity bonus if WT receptor was provided
     if df["Selectivity_ddG_kcal"].notna().any():
         sel_norm = np.clip((df["Selectivity_ddG_kcal"] + 0.5) / 2.5, 0.0, 1.0).fillna(0.5)
         mpo = (
@@ -602,9 +658,18 @@ def compute_composite_mpo(df: pd.DataFrame) -> pd.Series:
             + 0.07 * sa_norm
         )
 
-    # Hard penalty if PAINS/Brenk/NIH/custom alert triggered
     mpo = np.where(df["Alerts_Clean"], mpo, mpo * 0.25)
     return np.round(mpo, 4)
+
+
+def _clean_nan_for_json(obj):
+    if isinstance(obj, float) and (math.isnan(obj) or math.isinf(obj)):
+        return None
+    if isinstance(obj, dict):
+        return {k: _clean_nan_for_json(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_clean_nan_for_json(v) for v in obj]
+    return obj
 
 
 def main():
@@ -828,6 +893,7 @@ def main():
                 "WT_Vina_kcal",
                 "Selectivity_ddG_kcal",
                 "Asp12_Min_Dist_A",
+                "Asp12_SaltBridge_OK",
                 "Bound_Strain_kcal",
                 "Max_Ref_Tanimoto",
                 "QED",
@@ -838,7 +904,7 @@ def main():
     }
 
     with open(funnel_json, "w") as jf:
-        json.dump(funnel_summary, jf, indent=2)
+        json.dump(_clean_nan_for_json(funnel_summary), jf, indent=2, allow_nan=False)
 
     print("\n" + "=" * 78)
     print("EXHAUSTIVE BENCHMARK COMPLETE")
@@ -853,6 +919,7 @@ def main():
         "Composite_MPO_Score",
         "G12D_Vina_kcal",
         "Asp12_Min_Dist_A",
+        "Asp12_SaltBridge_OK",
         "Bound_Strain_kcal",
         "Max_Ref_Tanimoto",
         "QED",
